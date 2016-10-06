@@ -77,10 +77,22 @@ var generate = {
     },
 
     call: function(source, destination, string) {
+        // Create wrapping object
         var object = new THREE.Object3D();
 
-        laneLength = Math.abs(source.position.x - destination.position.x);
-        var callGeometry = new THREE.BoxGeometry(laneLength, this.laneWidth, this.laneWidth);
+        // What the distance between source and destination ?
+        var distance = new THREE.Vector3();
+        distance.subVectors(destination.position, source.position);
+
+        // Angle
+        var angle = -Math.asin(distance.z / distance.x);
+        if (isNaN(angle)) angle = Math.PI / 2.0;
+
+        // How long will the lane be ?
+        var length = distance.length();
+
+        // Create lane object
+        var callGeometry = new THREE.BoxGeometry(length, this.laneWidth, this.laneWidth);
         var callMaterial = new THREE.MeshPhongMaterial();
         callMaterial.color.set("#fff");
         var call = new THREE.Mesh(callGeometry, callMaterial);
@@ -88,14 +100,20 @@ var generate = {
         call.castShadow = true;
         object.add(call);
 
+        // Text
         var text = generate.text(string);
         text.position.y = 1.5;
         object.add(text);
 
-        object.position.x = source.position.x + laneLength/2;
+        // Set position
+        object.position.x = source.position.x + distance.x / 2.0;
         object.position.y = -10;
-        object.position.z = source.position.z;
+        object.position.z = source.position.z + distance.z / 2.0;
 
+        // Set angle
+        object.rotation.y = angle;
+
+        // We're done
         return object;
     },
 }

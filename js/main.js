@@ -61,6 +61,12 @@ scene.add(callFeedHim);
 callBuyHimAghanim = generate.call(ruby, luky, "buyHimAghanim()");
 scene.add(callBuyHimAghanim);
 
+callTest = generate.call(mato, ruby, "test()");
+scene.add(callTest);
+
+callTest2 = generate.call(mato, luky, "test 2");
+scene.add(callTest2);
+
 // Adjust camera
 camera.position.x = -15;
 camera.position.z = 50;
